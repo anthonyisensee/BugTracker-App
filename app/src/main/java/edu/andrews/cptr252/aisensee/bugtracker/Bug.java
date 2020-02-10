@@ -1,6 +1,7 @@
 package edu.andrews.cptr252.aisensee.bugtracker;
 
 import java.util.UUID;
+import java.util.Date;
 
 /**
  * Manage information for a specified bug.
@@ -10,6 +11,12 @@ public class Bug {
     private UUID mID;
     /** Title of the bug */
     private String mTitle;
+    /** Description of the bug */
+    private String mDescription;
+    /** Date when bug logged. */
+    private Date mDate;
+    /** Has the bug been solved. */
+    private boolean mSolved;
 
     /**
      * Create and initialize a new Bug
@@ -17,6 +24,7 @@ public class Bug {
     public Bug() {
         // Generates a unique identifier for the bug.
         mID = UUID.randomUUID();
+        mDate = new Date();
     }
 
     /** Return unique id for Bug.
@@ -41,4 +49,13 @@ public class Bug {
     public void setTitle(String title) {
         mTitle = title;
     }
+
+    // Getters and setters for private fields
+    public String getDescription() { return mDescription; }
+    public void setDescription(String description) { mDescription = description; }
+    public boolean isSolved() { return mSolved; }
+    public void setSolved(boolean solved) { mSolved = solved; }
+    public Date getDate() { return mDate; }
+    public void setDate(Date date) { mDate = date; }
+
 }
