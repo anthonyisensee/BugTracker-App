@@ -1,6 +1,7 @@
 package edu.andrews.cptr252.aisensee.bugtracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
  * Adapter responsible for getting the view for a bug.
  */
 public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
+
+    /** key used to pass the id of the bug */
+    public static final String EXTRA_BUG_ID = "edu.andrews.cptr252.aisensee.bugtracker.bug_id";
 
     public static final String TAG = "BugAdapter";
 
@@ -44,6 +48,9 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
         /** CheckBox that displays whether the bug was solved or not */
         public CheckBox bugSolvedCheckBox;
 
+        /** Context hosting the view */
+        public Context context;
+
         /** Create a new view holder for a given view item in the bug list */
         public ViewHolder(View itemView) {
             super(itemView);
@@ -52,6 +59,9 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
             bugTitleTextView = itemView.findViewById(R.id.bug_list_item_titleTextView);
             bugDateTextView = itemView.findViewById(R.id.bug_list_item_dateTextView);
             bugSolvedCheckBox = itemView.findViewById(R.id.bug_list_item_solvedCheckBox);
+
+            // Get the context of the view. This will be the activity hosting the view.
+            context = itemView.getContext();
 
             itemView.setOnClickListener(this);
 
@@ -69,7 +79,12 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
             // In the future, open the selected bug.
             if (position != RecyclerView.NO_POSITION) {
                 Bug bug = mBugs.get(position);
-                Log.d(TAG, bug.getTitle() + " was clicked");
+
+                // start an instance of BugDetailsFragment
+                Intent i = new Intent(context, BugDetailsActivity.class);
+                // pass the id of the bug as an intent
+                i.putExtra(BugAdapter.EXTRA_BUG_ID, bug.getID());
+                context.startActivity(i);
             }
         }
     }// end ViewHolder

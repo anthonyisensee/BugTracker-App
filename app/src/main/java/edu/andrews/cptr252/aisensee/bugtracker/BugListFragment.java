@@ -65,4 +65,15 @@ public class BugListFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Bug list fragment was paused (user was most likely editing a bug).
+     * Notify the adapter that the data set (Bug list) may have changed.
+     * The adapter should update the views.
+     */
+    @Override
+    public void onResume(){
+        super.onResume();   // first execute parent's onResume method.
+        mBugAdapter.notifyDataSetChanged();
+    }
+
 }

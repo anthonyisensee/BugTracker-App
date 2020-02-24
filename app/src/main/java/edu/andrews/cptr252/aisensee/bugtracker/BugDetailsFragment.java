@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import java.util.UUID;
 
 
 /**
@@ -47,10 +48,33 @@ public class BugDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Create a new BugDetailsFragment with a given Bug id as an argument.
+     * @param bugId
+     * @return A refrence to the new BugDetailsFragment
+     */
+    public static BugDetailsFragment newInstance(UUID bugId) {
+        //Create a new argument bundle object
+        // Add the Bug id as an argument
+        Bundle args = new Bundle();
+        args.putSerializable(BugAdapter.EXTRA_BUG_ID, bugId);
+        // Create new instance of BugDetailsFragment
+        BugDetailsFragment fragment = new BugDetailsFragment();
+        // Pass the bundle (containing the bug id) to the fragment
+        // The bundle will be unpacked in the fragment's onCreate(Bundle) method.
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // Extract bug id from Bundle
         super.onCreate(savedInstanceState);
-        mBug = new Bug();   // creates a new bug
+        UUID bugId = (UUID) getArguments().getSerializable(BugAdapter.EXTRA_BUG_ID);
+
+        // Get the bug with the id from the Bundle.
+        // This will be the bug that the fragment displays.
+        mBug = BugList.getInstance(getActivity()).getBug(bugId);
     }
 
 
@@ -61,6 +85,7 @@ public class BugDetailsFragment extends Fragment {
 
         // get reference to EditText box for bug title
         mTitleField = v.findViewById(R.id.bug_title);
+        mTitleField.setText(mBug.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -70,7 +95,7 @@ public class BugDetailsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                mBug.setDescription(s.toString());
+                mBug.setTitle(s.toString());
                 Log.d(TAG, "Set description to "+s.toString());
 
             }
@@ -89,6 +114,7 @@ public class BugDetailsFragment extends Fragment {
 
         // get reference to solved check box
         mSolvedCheckBox = v.findViewById(R.id.bug_solved);
+        mSolvedCheckBox.setChecked(mBug.isSolved());
         // toggle bug solved status when check box is tapped
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -99,9 +125,10 @@ public class BugDetailsFragment extends Fragment {
             }
         });
 
-        // get a reference to EditText box for bug title
-        mTitleField = v.findViewById(R.id.bug_title);
-        mTitleField.addTextChangedListener(new TextWatcher() {
+        // get a reference to EditText box for bug description
+        mDescriptionField = v.findViewById(R.id.bug_description);
+        mDescriptionField.setText(mBug.getDescription());
+        mDescriptionField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // left blank intentionally
@@ -109,9 +136,9 @@ public class BugDetailsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // user typed text, update the bug title
-                mBug.setTitle(s.toString());
+                mBug.setDescription(s.toString());
                 // write the new title to the message log for debugging
-                Log.d(TAG, "Title changed to " + mBug.getTitle());
+                Log.d(TAG, "Description changed to " + s.toString());
             }
 
             @Override
