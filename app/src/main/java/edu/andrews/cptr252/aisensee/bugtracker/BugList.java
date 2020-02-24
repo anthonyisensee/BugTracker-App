@@ -3,6 +3,8 @@ package edu.andrews.cptr252.aisensee.bugtracker;
 import android.content.Context;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
+
 import edu.andrews.cptr252.aisensee.bugtracker.Bug;
 
 
@@ -58,6 +60,22 @@ public class BugList {
      */
     public ArrayList<Bug> getBugs() {
         return mBugs;
+    }
+
+    /**
+     * Return the Bug with a given id.
+     * @param id Unique id for the bug
+     * @return The bug object or null if not found
+     */
+    public Bug getBug(UUID id) {
+        // Iterates through the bug list, looking for the bug with the same id that has
+        // been provided as a parameter. When it is found, it returns bug.
+        // if it cannot be found, returns null.
+        for (Bug bug : mBugs) {
+            if (bug.getID().equals(id))
+                return bug;
+        }
+        return null;
     }
 
 }
