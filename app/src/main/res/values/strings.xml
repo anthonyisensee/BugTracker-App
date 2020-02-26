@@ -8,6 +8,9 @@
     <string name="bug_solved_label">Solved?</string>
     <string name="bug_description_hint">Describe the bug here.</string>
 
+    <!-- For our date picker fragment -->
+    <string name="date_picker_title">Date bug discovered.</string>
+
     <!-- Bug list strings -->
     <string name="bug_list_label">Bugs</string>
 
