@@ -52,6 +52,8 @@ public class Bug {
 
     // Getters and setters for private fields
     public String getDescription() { return mDescription; }
+
+    // Sets the bugs description.
     public void setDescription(String description) { mDescription = description; }
     public boolean isSolved() { return mSolved; }
     public void setSolved(boolean solved) { mSolved = solved; }
