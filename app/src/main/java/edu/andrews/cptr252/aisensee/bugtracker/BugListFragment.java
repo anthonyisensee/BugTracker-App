@@ -1,5 +1,6 @@
 package edu.andrews.cptr252.aisensee.bugtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,11 +38,62 @@ public class BugListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /** Create a new bug, add it to the list and launch bug editor. */
+    private void addBug(){
+        // create new bug
+        Bug bug = new Bug();
+        // add bug to the list
+        BugList.getInstance(getActivity()).addBug(bug);
+
+        // create an intent to send to BugDetailsActivity
+        // add the bug Id as an extra so BugDetailsFragment can edit it.
+        Intent intent = new Intent(getActivity(), BugDetailsActivity.class);
+        intent.putExtra(BugAdapter.EXTRA_BUG_ID, bug.getID());
+
+        // launch BugDetailsActivity which will launch BugDetailsFragment
+        startActivityForResult(intent, 0);
+    }
+
+    /**
+     * Inflates the options menu, provided there is a menu bar present.
+     * @param menu The menu you've created and wish to display
+     * @param inflater The inflater that will inflate the menu
+     */
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        // inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_bug_list, menu);
+    }
+
+    /**
+     * Runs the correct function when an item is selected from the menu.
+     * @param item the menu item that has been selected.
+     * @return
+     */
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_add_bug:
+                // new bug icon clicked
+                addBug();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstances) {
         super.onCreate(savedInstances);
         getActivity().setTitle(R.string.bug_list_label);
         mBugs = BugList.getInstance(getActivity()).getBugs();
+
+        // lets onCreate know that we have an options menu
+        setHasOptionsMenu(true);
 
         // use our custom bug adapter for generating views for each bug
         mBugAdapter = new BugAdapter(mBugs);
