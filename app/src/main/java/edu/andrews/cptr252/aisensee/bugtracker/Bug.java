@@ -21,7 +21,7 @@ public class Bug {
     /**
      * Create and initialize a new Bug
      */
-    public Bug() {
+    public Bug() {  // also known as a constructor, it automatically adds data to a class upon generation.
         // Generates a unique identifier for the bug.
         mID = UUID.randomUUID();
         mDate = new Date();

@@ -13,30 +13,20 @@ import edu.andrews.cptr252.aisensee.bugtracker.Bug;
  * Only one instance of this class may be created. Ever.
  */
 public class BugList {
-    /**
-     * Instance variable for BugList
-     */
+
+    /** Instance variable for BugList */
     private static BugList sOurInstance;
 
-    /**
-     * List of Bugs
-     */
+    /** List of Bugs */
     private ArrayList<Bug> mBugs;
-    /**
-     * Reference to information about app environment
-     */
-    private Context mAppContext;
+
+    /** Reference to information about app environment */
+    private Context mAppContext;    // reference to the app context allows this class to start activities and access project resources
 
     private BugList(Context appContext) {
         mAppContext = appContext;
         mBugs = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Bug bug = new Bug();
-            bug.setTitle("Bug #" + i);
-            // every other one is solved
-            bug.setSolved(i % 2 == 0);
-            mBugs.add(bug);
-        }
+
     }
 
     /**
@@ -51,6 +41,14 @@ public class BugList {
             sOurInstance = new BugList(c.getApplicationContext());
         }
         return sOurInstance;
+    }
+
+    /**
+     * Add a bug to the list.
+     * @ param bug is the bug to add.
+     */
+    public void addBug(Bug bug) {
+        mBugs.add(bug);
     }
 
     /**
