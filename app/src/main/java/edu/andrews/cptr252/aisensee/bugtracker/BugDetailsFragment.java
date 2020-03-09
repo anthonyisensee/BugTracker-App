@@ -181,6 +181,15 @@ public class BugDetailsFragment extends Fragment {
     }
 
     /**
+     * Save the bug list to a JSON file when app is paused.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        BugList.getInstance(getActivity()).saveBugs();
+    }
+
+    /**
      * Process the result sent back to BugDetailsFragment from fragment that it is communicating
      * with (e.g. DatePickerFragment).
      * @param requestCode is the type of result passed back to BugDetailsFragment.
