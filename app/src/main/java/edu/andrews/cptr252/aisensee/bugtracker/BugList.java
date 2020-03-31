@@ -81,12 +81,22 @@ public class BugList {
     }
 
     /**
-     * Add a bug to the list.
-     * @ param bug is the bug to add.
+     * Add a bug to the list at given position.
+     * @param position is the index for the bug to add.
+     * @param bug is the bug to add.
      */
-    public void addBug(Bug bug) {
-        mBugs.add(bug);
-        saveBugs();
+    public void addBug(int position, Bug bug) {
+        mBugs.add(position, bug);       // adds the new bug to the list.
+        saveBugs();                     // updates the JSON file.
+    }
+
+    /**
+     * Deletes a given bug from the list of bugs.
+     * @param position is the index of bug to delete.
+     */
+    public void deleteBug(int position) {
+        mBugs.remove(position);     // removes the bug at the indexed position
+        saveBugs();                 // saves the updated bug list to the JSON file.
     }
 
     /**

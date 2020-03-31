@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +44,7 @@ public class BugListFragment extends Fragment {
         // create new bug
         Bug bug = new Bug();
         // add bug to the list
-        BugList.getInstance(getActivity()).addBug(bug);
+        BugList.getInstance(getActivity()).addBug(mBugs.size(), bug);   // adds the bug to the final position in the list
 
         // create an intent to send to BugDetailsActivity
         // add the bug Id as an extra so BugDetailsFragment can edit it.
@@ -96,7 +97,7 @@ public class BugListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // use our custom bug adapter for generating views for each bug
-        mBugAdapter = new BugAdapter(mBugs);
+        mBugAdapter = new BugAdapter(mBugs, getActivity());     // getActivity added in relation to BugSwiper?
 
         // for now, list bugs in log
         for (Bug bug: mBugs){
@@ -116,6 +117,11 @@ public class BugListFragment extends Fragment {
         mRecyclerView.setAdapter((mBugAdapter));
         // Use a linear layout when displaying bugs
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Create and attach our new touch helper for bug swipes
+        BugSwiper bugSwiper = new BugSwiper(mBugAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(bugSwiper);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         return v;
     }

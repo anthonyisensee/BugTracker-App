@@ -20,4 +20,8 @@
     <!-- Strings for menu -->
     <string name="new_bug">New Bug</string>
 
+    <!-- Strings for bug deletion (and undo-ing) -->
+    <string name="undo_option">UNDO</string>
+    <string name="bug_deleted_msg">%1$s deleted!</string>   <!-- %1$s - The first argument (another string) to getString -->
+
 </resources>

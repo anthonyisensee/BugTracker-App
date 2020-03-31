@@ -1,7 +1,9 @@
 package edu.andrews.cptr252.aisensee.bugtracker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.w3c.dom.Text;
 
@@ -28,12 +32,85 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
     /** Used to store reference to list of bugs. */
     private ArrayList<Bug> mBugs;
 
+    /** Activity hosting the list fragment */
+    private Activity mActivity;
+
     /**
      * Constructor for BugAdapter. initialize adapter with given list of bugs.
      * @param bugs list of bugs to display.
      */
-    public BugAdapter(ArrayList<Bug> bugs) {
+    public BugAdapter(ArrayList<Bug> bugs, Activity activity) {
         mBugs = bugs;
+        mActivity = activity;
+    }
+
+    /** Return reference to activity hosting the bug list fragment */
+    public Context getActivity() {
+        return mActivity;
+    }
+
+    /**
+     * Create snackbar with ability to undo bug deletion.
+     */
+    private void showUndoSnackbar(final Bug bug, final int position) {
+
+        // get root view for activity hosting bug list fragment
+        View view = mActivity.findViewById(android.R.id.content);
+
+        // build message stating which bug was deleted
+        String bugDeletedText = mActivity.getString(R.string.bug_deleted_msg, bug.getTitle());
+
+        // create the snackbar
+        Snackbar snackbar = Snackbar.make(view, bugDeletedText, Snackbar.LENGTH_LONG);
+
+        // adds the undo option to the snackbar
+        snackbar.setAction(R.string.undo_option, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // undo is selected, restore the deleted item
+                restoreBug(bug, position);
+            }
+        });
+
+        // text for undo string will be yellow
+        snackbar.setActionTextColor(Color.YELLOW);
+
+        // and finally, display the snackbar
+        snackbar.show();
+
+    }
+
+    /**
+     * Remove bug from list
+     * @param position index of bug to remove
+     */
+    public void deleteBug(int position) {
+
+        // save deleted bug so we can undo delete if needed.
+        final Bug bug = mBugs.get(position);
+
+        // delete bug from list
+        BugList.getInstance(mActivity).deleteBug(position);
+
+        // update list of bugs in recyclerview
+        notifyItemRemoved(position);
+
+        // display snackbar so user may undo their delete
+        showUndoSnackbar(bug, position);
+    }
+
+    /**
+     * Put deleted bug back into list
+     * @param bug to restore
+     * @param position in list where bug will go
+     */
+    public void restoreBug(Bug bug, int position) {
+
+        // restores the bug to the list
+        BugList.getInstance(mActivity).addBug(position, bug);
+
+        // notifies the recylcerview to update it's view of bugs
+        notifyItemInserted(position);
     }
 
     /**
