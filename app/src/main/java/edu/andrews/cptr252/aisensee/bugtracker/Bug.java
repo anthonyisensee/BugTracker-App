@@ -79,7 +79,15 @@ public class Bug {
      */
     public Bug() {  // also known as a constructor, it automatically adds data to a class upon generation.
         // Generates a unique identifier for the bug.
-        mID = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
+
+    /**
+     * Create and initialize a new Bug with preset UUID
+     * @param id Preset ID
+     */
+    public Bug(UUID id) {
+        mID = id;
         mDate = new Date();
     }
 
@@ -94,9 +102,7 @@ public class Bug {
      * Return the title for the bug.
      * @return Title of Bug
      */
-    public String getTitle(){
-        return mTitle;
-    }
+    public String getTitle(){ return mTitle; }
 
     /**
      * Provide a new title for the bug.
