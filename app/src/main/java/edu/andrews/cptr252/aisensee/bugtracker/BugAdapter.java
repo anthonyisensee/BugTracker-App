@@ -72,6 +72,17 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
             }
         });
 
+        // if user does not undo
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    // officially delete bug from list
+                    BugList.getInstance(mActivity).deleteBug(bug);
+                }
+            }
+        });
+
         // text for undo string will be yellow
         snackbar.setActionTextColor(Color.YELLOW);
 
@@ -89,8 +100,9 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
         // save deleted bug so we can undo delete if needed.
         final Bug bug = mBugs.get(position);
 
-        // delete bug from list
-        BugList.getInstance(mActivity).deleteBug(position);
+        // delete bug from bug array used by adapter
+        // will be deleted from database once undo snackbar is dismissed
+        mBugs.remove(position);
 
         // update list of bugs in recyclerview
         notifyItemRemoved(position);
@@ -100,17 +112,24 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.ViewHolder> {
     }
 
     /**
+     * Force adapter to load new bug list and regenerate views.
+     */
+    public void refreshBugListDisplay() {
+        // get instance of bug list
+        mBugs = BugList.getInstance(mActivity).getBugs();
+        // update views
+        notifyDataSetChanged();
+    }
+
+    /**
      * Put deleted bug back into list
      * @param bug to restore
      * @param position in list where bug will go
      */
     public void restoreBug(Bug bug, int position) {
 
-        // restores the bug to the list
-        BugList.getInstance(mActivity).addBug(position, bug);
-
-        // notifies the recylcerview to update it's view of bugs
-        notifyItemInserted(position);
+        // refresh the display
+        refreshBugListDisplay();
     }
 
     /**

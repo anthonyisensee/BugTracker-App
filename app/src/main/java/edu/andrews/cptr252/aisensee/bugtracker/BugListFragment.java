@@ -44,7 +44,7 @@ public class BugListFragment extends Fragment {
         // create new bug
         Bug bug = new Bug();
         // add bug to the list
-        BugList.getInstance(getActivity()).addBug(mBugs.size(), bug);   // adds the bug to the final position in the list
+        BugList.getInstance(getActivity()).addBug(bug);
 
         // create an intent to send to BugDetailsActivity
         // add the bug Id as an extra so BugDetailsFragment can edit it.
@@ -99,12 +99,6 @@ public class BugListFragment extends Fragment {
         // use our custom bug adapter for generating views for each bug
         mBugAdapter = new BugAdapter(mBugs, getActivity());     // getActivity added in relation to BugSwiper?
 
-        // for now, list bugs in log
-        for (Bug bug: mBugs){
-            Log.d(TAG, bug.getTitle());
-        }
-
-
     }
 
     @Override
@@ -134,7 +128,7 @@ public class BugListFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();   // first execute parent's onResume method.
-        mBugAdapter.notifyDataSetChanged();
+        mBugAdapter.refreshBugListDisplay();
     }
 
 }
